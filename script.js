@@ -8,14 +8,18 @@ const searchForm = document.querySelector("#search-form");
 const searchInput = document.querySelector("#search-input");
 const gallery = document.querySelector("#gallery");
 const statusMessage = document.querySelector("#status");
+let activeController = null;
 
 // Search for shows when the user submits the form.
 searchForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
     const searchTerm = searchInput.value.trim();
-
     if (searchTerm === "") {
+        if (activeController) {
+            activeController.abort();
+        }
+
         statusMessage.textContent = "Please enter a TV show.";
         gallery.replaceChildren();
         return;
@@ -30,6 +34,13 @@ searchForm.addEventListener("submit", function (event) {
  * @returns {Promise<void>} Resolves when the search finishes.
  */
 async function searchShows(searchTerm) {
+    if (activeController) {
+        activeController.abort();
+    }
+
+    const controller = new AbortController();
+    activeController = controller;
+
     gallery.replaceChildren();
     statusMessage.textContent = "Loading TV shows...";
 
@@ -37,13 +48,17 @@ async function searchShows(searchTerm) {
         const url = "https://api.tvmaze.com/search/shows?q="
             + encodeURIComponent(searchTerm);
 
-        const response = await fetch(url);
-
+        const response = await fetch(url, {
+            signal: controller.signal
+        });
         if (!response.ok) {
             throw new Error("Unable to retrieve TV shows.");
         }
 
         const results = await response.json();
+        if (controller.signal.aborted) {
+            return;
+        }
         const shows = results.slice(0, 10);
 
         if (shows.length === 0) {
@@ -123,13 +138,17 @@ async function searchShows(searchTerm) {
                 const castUrl = "https://api.tvmaze.com/shows/"
                     + show.id + "/cast";
 
-                const castResponse = await fetch(castUrl);
-
+                const castResponse = await fetch(castUrl, {
+                    signal: controller.signal
+                });
                 if (!castResponse.ok) {
                     throw new Error("Unable to retrieve cast.");
                 }
 
                 const castData = await castResponse.json();
+                if (controller.signal.aborted) {
+                    return;
+                }
 
                 const castNames = castData.slice(0, 5).map(function (member) {
                     return member.person.name;
@@ -138,10 +157,13 @@ async function searchShows(searchTerm) {
                 castInfo.textContent = "Main Cast: "
                     + (castNames.join(", ") || "Not available");
             } catch (error) {
+                if (controller.signal.aborted) {
+                    return;
+                }
+
                 castInfo.textContent = "Main Cast: Not available";
                 console.error(error);
             }
-
 
 
             const link = document.createElement("a");
@@ -154,9 +176,20 @@ async function searchShows(searchTerm) {
             gallery.appendChild(card);
         }
     } catch (error) {
+        if (controller.signal.aborted) {
+            return;
+        }
+
         gallery.replaceChildren();
-        statusMessage.textContent =
-            "Something went wrong. Please try again.";
+
+        if (error.message === "Rate limit exceeded") {
+            statusMessage.textContent =
+                "Too many requests. Please wait and try again.";
+        } else {
+            statusMessage.textContent =
+                "Something went wrong. Please try again.";
+        }
+
         console.error(error);
     }
 }
