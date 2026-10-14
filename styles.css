@@ -1,4 +1,3 @@
-
 /*
   Assignment 4: TVmaze Show Gallery
   Description: Styles for the TV show gallery
@@ -77,6 +76,7 @@ button:hover {
     gap: 20px;
 }
 
+
 .show-card {
     background-color: white;
     width: 300px;
@@ -84,7 +84,15 @@ button:hover {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    display: flex;
+    flex-direction: column;
 }
+
+.show-card a {
+    margin-top: auto;
+}
+
 
 .show-card img {
     width: 100%;
