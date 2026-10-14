@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<!--
+  Name: Cameron Wilkerson
+  Date: October 14, 2026
+  Assignment 4: TVmaze Show Gallery
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TVmaze Show Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>TVmaze Show Gallery</h1>
+        <p>Search for your favorite TV shows!</p>
+    </header>
+
+    <main>
+        <form id="search-form">
+            <label for="search-input">Search TV Shows</label>
+            <input
+                type="search"
+                id="search-input"
+                placeholder="Enter a TV show"
+                required
+            >
+            <button type="submit">Search</button>
+        </form>
+
+        <p id="status" role="status" aria-live="polite"></p>
+
+        <section id="gallery" aria-label="TV show results">
+        </section>
+    </main>
+
+    <footer>
+        <p>
+            Show data provided by
+            <a href="https://www.tvmaze.com/" target="_blank"
+               rel="noopener noreferrer">TVmaze</a>.
+        </p>
+    </footer>
+</body>
+</html>
