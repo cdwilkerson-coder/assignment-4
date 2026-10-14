@@ -1,6 +1,7 @@
 /*
-  Assignment 4: TVmaze Show Gallery
-  Description: Styles for the TV show gallery
+Name: Cameron Wilkerson
+Date: October 14, 2026
+Description: Styles for Assignment 4 TVmaze Show Gallery.
 */
 
 * {
@@ -76,7 +77,6 @@ button:hover {
     gap: 20px;
 }
 
-
 .show-card {
     background-color: white;
     width: 300px;
@@ -84,13 +84,14 @@ button:hover {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
     display: flex;
     flex-direction: column;
 }
 
 .show-card a {
     margin-top: auto;
+    color: #0056b3;
+    font-weight: bold;
 }
 
 
@@ -110,10 +111,6 @@ button:hover {
     line-height: 1.5;
 }
 
-.show-card a {
-    color: #0056b3;
-    font-weight: bold;
-}
 
 footer {
     text-align: center;

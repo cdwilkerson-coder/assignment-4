@@ -1,7 +1,7 @@
-
 /*
-  Assignment 4: TVmaze Show Gallery
-  Description: Search TV shows using the Fetch API
+Name: Cameron Wilkerson
+Date: October 14, 2026
+Description: Searches TVmaze and displays TV show information.
 */
 
 const searchForm = document.querySelector("#search-form");
@@ -24,7 +24,11 @@ searchForm.addEventListener("submit", function (event) {
     searchShows(searchTerm);
 });
 
-// Request TV shows from the TVmaze API.
+/**
+ * Searches the TVmaze API and displays matching TV shows.
+ * @param {string} searchTerm - The TV show name to search for.
+ * @returns {Promise<void>} Resolves when the search finishes.
+ */
 async function searchShows(searchTerm) {
     gallery.replaceChildren();
     statusMessage.textContent = "Loading TV shows...";
@@ -71,10 +75,12 @@ async function searchShows(searchTerm) {
             card.appendChild(title);
 
             const summary = document.createElement("p");
-            const plainText = document.createElement("div");
-            plainText.innerHTML = show.summary || "";
 
-            const fullSummary = plainText.textContent.trim();
+            const plainText = new DOMParser().parseFromString(
+                show.summary || "", "text/html"
+            );
+
+            const fullSummary = plainText.body.textContent.trim();
 
             summary.textContent = fullSummary.length > 180
                 ? fullSummary.slice(0, 180) + "..."
